@@ -1,0 +1,44 @@
+#by using files
+import csv,os,glob
+path = os.getcwd()
+csv_files = glob.glob(os.path.join(path, "*.csv"))
+for files in csv_files:
+    with open(files) as csvrp:
+        values=csv.reader(csvrp)
+        data=list(values)
+        for row in data:
+            for col in row:
+                print(col,"\t",end='')
+            print()
+        print("Table printed succesfully")
+ 
+#by using pandas
+import pandas as pd
+from datetime import datetime
+df = pd.read_csv("cron_test.csv")
+print(df)
+
+def change_column_name(source_column_name, target_column_name):
+    if source_column_name in df.columns:
+        df.rename(columns={source_column_name:target_column_name }, inplace=True)
+        print(df)
+        print("Table Column names changed successfully")
+    else:
+        print("The entered column name is not available in CSV file")
+source_column_name = input("Enter source column name that you want to change: ")
+target_column_name = input("Enter the target column name: ")
+change_column_name(source_column_name, target_column_name)
+
+
+datetime_format = "%m/%d/%Y %H:%M"
+def check(column_name):
+    for x in df[column_name]:
+        res=True
+        try:
+            res = bool(datetime.strptime(x, datetime_format))
+        except ValueError:
+            res = False
+        if res==False:
+            print('In "{}" column "{}"  is not matching with date and time format'.format(column_name,x))
+column_name=input('Enter the column name:')
+check(column_name)
